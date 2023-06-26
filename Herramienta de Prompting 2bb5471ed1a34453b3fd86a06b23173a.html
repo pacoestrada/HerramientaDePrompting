@@ -1,0 +1,679 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Herramienta de Prompting</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2bb5471e-d1a3-4453-b3fd-86a06b23173a" class="page sans"><header><img class="page-cover-image" src="Herramienta%20de%20Prompting%202bb5471ed1a34453b3fd86a06b23173a/1500x500.jpeg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="Herramienta%20de%20Prompting%202bb5471ed1a34453b3fd86a06b23173a/F_Cuadrado_(1).jpg"/></div><h1 class="page-title">H<strong>erramienta de Prompting</strong></h1><p class="page-description"></p></header><div class="page-body"><h2 id="d2281c93-f766-4ebb-b184-a6b1028768c3" class="">Explicación</h2><p id="2407b813-bf6a-44f2-b956-37f06e1ea625" class="">Este proceso implica la creación de un sistema organizado para gestionar y utilizar los prompts. Algunas cosas que podrían estar incluidas son:</p><ol type="1" id="81224601-b425-40c8-bbcb-5a4b7ec7a29b" class="numbered-list" start="1"><li><strong>Repositorio de Contextos de Vida</strong>: Crear un lugar donde se puedan guardar bloques de contexto de tu vida para tenerlos siempre a mano. Esto podría incluir información sobre quién eres, qué haces en tu negocio, etc.</li></ol><ol type="1" id="1019f118-10d3-4c1d-92fd-d5a3095402da" class="numbered-list" start="2"><li><strong>Otros repositorios de Estilos, Tono, Formato, etc.</strong>: Crear otro lugar donde se puedan guardar diferentes estilos, tonos y formatos de prompts para poder acceder a ellos rápidamente cuando se necesiten.</li></ol><ol type="1" id="d4b71300-29f7-4cc9-a2af-5fb063a6c18b" class="numbered-list" start="3"><li><strong>Conceptos de alta densidad informativa: </strong>se refieren a ideas o términos que, aunque pueden ser breves o parecer simples a primera vista, contienen o representan una gran cantidad de información.<ul id="290a9a29-219b-48dc-8ad8-e1ae5d7a58f6" class="toggle"><li><details open=""><summary>Ejemplos</summary><ul id="b30b6a2e-788c-420c-bbe7-38331f5ed5a1" class="toggle"><li><details open=""><summary>Como un premio Nobel</summary><p id="e703c7fb-26e1-4595-b383-a5090bf2b3e2" class="">Cuando dices &quot;haz algo como si fueras un Premio Nobel&quot;, el concepto de &quot;Premio Nobel&quot; lleva consigo varias connotaciones y expectativas que pueden influir en cómo se realiza la tarea. Aquí te dejo algunas connotaciones asociadas con ser un Premio Nobel:</p><ol type="1" id="f399c074-572d-4f4d-96a2-399c425d00fa" class="numbered-list" start="1"><li><strong>Excelencia</strong>: Los Premios Nobel se otorgan a aquellos que han hecho contribuciones sobresalientes en sus campos. Por lo tanto, se espera que cualquier cosa hecha &quot;como un Premio Nobel&quot; sea de la más alta calidad.</li></ol><ol type="1" id="173eba54-4a14-46bf-80bb-68ede146d3f1" class="numbered-list" start="2"><li><strong>Innovación</strong>: Los laureados con el Premio Nobel suelen ser pioneros en sus campos, introduciendo nuevas ideas y enfoques. Por lo tanto, hacer algo &quot;como un Premio Nobel&quot; podría implicar pensar de manera innovadora y creativa.</li></ol><ol type="1" id="5db8f8df-81c8-4689-8186-b95221c86b53" class="numbered-list" start="3"><li><strong>Rigor y precisión</strong>: Los laureados con el Premio Nobel son reconocidos por su riguroso trabajo académico y científico. Por lo tanto, hacer algo &quot;como un Premio Nobel&quot; podría implicar prestar atención a los detalles y garantizar la precisión.</li></ol><ol type="1" id="a61d2494-0726-45f0-954f-d2c78acd7abd" class="numbered-list" start="4"><li><strong>Contribución a la humanidad</strong>: Los Premios Nobel suelen otorgarse a aquellos cuyo trabajo ha beneficiado a la humanidad de alguna manera. Por lo tanto, hacer algo &quot;como un Premio Nobel&quot; podría implicar tener en cuenta el impacto a largo plazo o el beneficio potencial para las personas.</li></ol><ol type="1" id="f0bc021f-71a4-4cad-8d81-87db648bc9ba" class="numbered-list" start="5"><li><strong>Perseverancia</strong>: Ganar un Premio Nobel a menudo requiere años de dedicación y esfuerzo. Por lo tanto, hacer algo &quot;como un Premio Nobel&quot; podría implicar mostrar una gran perseverancia y compromiso con la tarea.</li></ol></details></li></ul><ul id="0d2c8700-dbb1-4201-a1b6-dcc573c162c4" class="toggle"><li><details open=""><summary>Como un eneatipo 5</summary><p id="6977aab3-66a7-4c45-a35d-0277ebd4bb87" class="">El eneatipo 5, también conocido como el &quot;Investigador&quot; en la teoría del Eneagrama, tiene connotaciones e implicaciones específicas. Cuando se pide hacer algo &quot;como un eneatipo 5&quot;, podría entenderse que se debe actuar considerando las siguientes características:</p><ol type="1" id="2074a56b-9a89-45a6-abd8-44a0541f0fb7" class="numbered-list" start="1"><li><strong>Curiosidad y análisis</strong>: Los eneatipo 5 son conocidos por su deseo de entender el mundo a su alrededor. Tienen una inclinación hacia la acumulación de conocimientos y son muy analíticos. Por lo tanto, hacer algo &quot;como un eneatipo 5&quot; podría implicar un enfoque detallado y analítico.</li></ol><ol type="1" id="c76fe1b4-c2a6-47df-8908-e69270dddd20" class="numbered-list" start="2"><li><strong>Independencia</strong>: Este tipo de personalidad valora su independencia y puede ser bastante autosuficiente. Hacer algo &quot;como un eneatipo 5&quot; podría significar hacerlo de manera autónoma, sin depender demasiado de los demás.</li></ol><ol type="1" id="71daae35-2a43-4ba8-a9f6-6d2eb9b82899" class="numbered-list" start="3"><li><strong>Introversión</strong>: Los eneatipo 5 tienden a ser introvertidos, prefiriendo tiempo a solas para reflexionar y recargar energías. Hacer algo &quot;como un eneatipo 5&quot; podría implicar un enfoque más reservado y reflexivo.</li></ol><ol type="1" id="255807a2-5521-4a9d-93d8-c8b8ccaf7fbf" class="numbered-list" start="4"><li><strong>Visionario</strong>: Los eneatipo 5 son capaces de pensar de forma innovadora y creativa. Si se pide hacer algo &quot;como un eneatipo 5&quot;, podría entenderse como la necesidad de buscar soluciones originales o visionarias.</li></ol><ol type="1" id="efdc5d88-d593-4a1d-9411-b1e4852edd4d" class="numbered-list" start="5"><li><strong>Desapego emocional</strong>: Los eneatipo 5 pueden a veces distanciarse emocionalmente para preservar su energía y concentración. Hacer algo &quot;como un eneatipo 5&quot; podría implicar un enfoque más lógico y objetivo, en lugar de uno emocional.</li></ol></details></li></ul></details></li></ul></li></ol><ol type="1" id="a7a3451a-c620-4808-a5b2-2363203846e9" class="numbered-list" start="4"><li><strong>Actualización y Mantenimiento</strong>: Asegurarse de que hay un proceso en marcha para mantener actualizados estos repositorios y para añadir nuevos prompts a medida que se vayan creando.</li></ol><h2 id="31a7b28e-1a19-474c-894a-1ba1c5f60cae" class=""><strong>Estructura del Prompt</strong></h2><p id="7af5a2e6-882c-4eca-b4be-d64849e05c51" class="block-color-default">Actúa como si fueras [Rol]</p><p id="bcc7ad66-fd49-4ea6-bb3a-25f42d60c957" class="">[Verbo] [Qué] [Para qué]Asegúrate de aplicar lo siguiente: </p><ul id="cb0c1a1f-d2cf-4811-9142-93bd6f07df26" class="bulleted-list"><li style="list-style-type:disc">[Temas a tratar]</li></ul><ul id="cdee0d26-1745-4bab-a517-bfb1559543c9" class="bulleted-list"><li style="list-style-type:disc">[Formato]</li></ul><ul id="e2b4ae6e-c168-4060-9b56-3d710b6c2216" class="bulleted-list"><li style="list-style-type:disc">[Estilo]</li></ul><ul id="c07734ea-5abd-4de7-9261-6ed6776f4add" class="bulleted-list"><li style="list-style-type:disc">[Tono]</li></ul><ul id="dab22ae4-c5ff-4625-99ec-e0f91522d3f8" class="bulleted-list"><li style="list-style-type:disc">[Audiencia]</li></ul><ul id="3259ec24-2a36-4633-a105-45cfa85f1b0a" class="bulleted-list"><li style="list-style-type:disc">[Otras consideraciones]</li></ul><p id="16e33d19-137d-40f0-b051-069d4b3f1fdc" class="">Ten en cuenta el siguiente contexto:</p><p id="cce08270-209d-413f-b509-ad9f5366772d" class="">[Contexto]</p><p id="0d8c960c-bc5f-4020-aaec-f357a55c9fb3" class="">Hazme las preguntas que consideres necesarias para que puedas darme la mejor respuesta posible.</p><figure class="block-color-default callout" style="white-space:pre-wrap;display:flex" id="0d5b4765-aa27-4a4e-bcda-c2442ccf741b"><div style="font-size:1.5em"><span class="icon">ℹ️</span></div><div style="width:100%"><strong>Explicación de la estructura del prompt</strong><ul id="2b01ed2a-6b8c-431b-bb7c-0f294963146e" class="toggle"><li><details open=""><summary><strong>Abrir</strong></summary><p id="5c4f6b6b-52b0-4080-9b66-487901ffb9a0" class=""><strong>Actúa como si fueras [Rol]</strong></p><p id="9932f085-1d7a-43ef-ab71-6f5116fae195" class="">Aquí, estás dando un marco para la perspectiva de la respuesta. Al definir un rol, le estás diciendo a ChatGPT cómo debería &quot;pensar&quot; o &quot;actuar&quot; en su respuesta. Por ejemplo, si dices &quot;Actúa como si fueras un historiador&quot;, la respuesta de ChatGPT se centrará en proporcionarte una respuesta precisa y detallada basada en los hechos históricos.</p><p id="8424cca4-3c0c-4773-9041-325dc0004f53" class=""><strong>[Verbo] [Qué] [Para qué]</strong></p><ul id="0805683d-21f0-47b8-ab84-44d80bf7f8f0" class="bulleted-list"><li style="list-style-type:disc"><strong>[Verbo]</strong>: Aquí especificas la acción que debe realizar ChatGPT. Este verbo puede incluir acciones como &quot;describe&quot;, &quot;analiza&quot;, &quot;explica&quot;, &quot;compara&quot;, etc.</li></ul><ul id="9ab6fcce-fcc4-4eda-b3f7-6773709b6ede" class="bulleted-list"><li style="list-style-type:disc"><strong>[Qué]</strong>: Este es el objeto sobre el que se realiza la acción. Por ejemplo, si el verbo es &quot;describe&quot;, el &quot;qué&quot; sería lo que deseas describir.</li></ul><ul id="6d68fb0d-46b9-49d3-bd31-99d63108e2c8" class="bulleted-list"><li style="list-style-type:disc"><strong>[Para qué]</strong>: Esto establece el propósito o la intención de la acción. Puede ser para educar, entretener, facilitar una decisión, etc.</li></ul><p id="03c6c181-951f-4719-b1a7-11d41ddd5dc0" class=""><strong>Asegúrate de aplicar lo siguiente:</strong></p><ul id="448c17df-232b-498a-95e6-1d0dc319d88a" class="bulleted-list"><li style="list-style-type:disc"><strong>[Temas a tratar]</strong>: Aquí defines los puntos o temas clave que debe cubrir la respuesta.</li></ul><ul id="056162bb-ea05-41eb-bf41-020159d1213a" class="bulleted-list"><li style="list-style-type:disc"><strong>[Formato]</strong>: Esto determina cómo se organiza y presenta la respuesta. ¿Es una lista, un diálogo, un ensayo, etc.?</li></ul><ul id="e6cbe71f-b818-475f-b56f-35ceab2b7e20" class="bulleted-list"><li style="list-style-type:disc"><strong>[Estilo]</strong>: El estilo se refiere a la forma en que se presentará la respuesta, ya sea de manera académica, técnica, narrativa, etc.</li></ul><ul id="6d8776d7-c848-4a47-bd36-e77a35a43513" class="bulleted-list"><li style="list-style-type:disc"><strong>[Tono]</strong>: Esto define la actitud emocional de la respuesta. ¿Es la respuesta seria, humorística, crítica, etc.?</li></ul><ul id="4a297b70-3ef1-45a8-87a1-d8d517d29e90" class="bulleted-list"><li style="list-style-type:disc"><strong>[Audiencia]</strong>: ¿A quién está dirigida la respuesta? Esta definición te ayuda a determinar el tipo de lenguaje y referencias culturales que se utilizarán.</li></ul><ul id="24480571-9ade-4059-b8b6-980be9a9632c" class="bulleted-list"><li style="list-style-type:disc"><strong>[Otras consideraciones]</strong>: Esto cubre cualquier otra especificación que pueda ser relevante para la respuesta.</li></ul><p id="eac93272-1ca0-425b-9df6-511092b14d4c" class=""><strong>Ten en cuenta el siguiente contexto: [Contexto]</strong></p><p id="7a96c291-f86d-45f8-bf18-013696330a82" class="">Este bloque te da espacio para proporcionar información de fondo que puede ser relevante para entender y responder al prompt. Puede ser información histórica, eventos recientes, detalles del entorno, etc.</p><p id="d386874c-878b-46e1-b9ad-353bb5d07f85" class=""><strong>Hazme las preguntas que consideres necesarias para que puedas darme la mejor respuesta posible.</strong></p><p id="bcff2fc8-d34a-4345-b910-7ba2dcdb321a" class="">Este es un recordatorio para que ChatGPT pueda hacer preguntas para recopilar más información, si es necesario. Esto te ayuda a obtener una respuesta más precisa y útil.</p></details></li></ul></div></figure><h2 id="e3e14d36-7f70-4208-955c-d0b2e854051d" class="">Repositorio</h2><ul id="99547c27-bec8-49ba-8979-bd7005fa89b6" class="toggle"><li><details open=""><summary><strong>Prompts</strong></summary><ul id="7699033b-674d-4475-8491-0180fb44c7ae" class="toggle"><li><details open=""><summary><strong>Prompt para describir Empresa</strong></summary><p id="2e31eceb-a006-4533-b605-32c962aa87ba" class=""><strong>Actúa como si fueras [un experto en redacción de perfiles corporativos]</strong></p><p id="a2b6602e-0924-4f42-8f11-3094122fa17c" class=""><strong>Crea una descripción detallada de [NOMBRE_DE_LA_EMPRESA], teniendo en cuenta los siguientes detalles:</strong></p><ol type="1" id="e6d01d7b-aac1-447f-b32e-b8e4e2da308c" class="numbered-list" start="1"><li><strong>Nombre de la empresa:</strong> [INSERTA EL NOMBRE DE LA EMPRESA]</li></ol><ol type="1" id="e5f895d1-7871-4dc7-be6b-7e7ed15c65cb" class="numbered-list" start="2"><li><strong>Industria:</strong> [INSERTA LA INDUSTRIA]</li></ol><ol type="1" id="d4abdaab-a6af-4f65-bd33-e9b812f41a4f" class="numbered-list" start="3"><li><strong>Ubicación:</strong> [INSERTA LA UBICACIÓN]</li></ol><ol type="1" id="ce9bc0e5-398b-4693-bcbc-193f4163c42b" class="numbered-list" start="4"><li><strong>Productos/Servicios:</strong> [INSERTA LOS PRODUCTOS/SERVICIOS]</li></ol><ol type="1" id="f5715c56-d493-4d6e-a9a8-c097db380428" class="numbered-list" start="5"><li><strong>Público objetivo:</strong> [INSERTA EL PÚBLICO OBJETIVO]</li></ol><ol type="1" id="d51483ed-aaef-4cf6-94eb-0f013bbe1eb7" class="numbered-list" start="6"><li><strong>Misión:</strong> [INSERTA LA MISIÓN]</li></ol><ol type="1" id="5dbdc18e-44fa-4bd5-bce4-918eab1a68e2" class="numbered-list" start="7"><li><strong>Visión:</strong> [INSERTA LA VISIÓN]</li></ol><ol type="1" id="9893a414-6a14-40be-9d92-e145ec96771a" class="numbered-list" start="8"><li><strong>Cultura y valores:</strong> [INSERTA LA CULTURA Y LOS VALORES]</li></ol><ol type="1" id="69dbc1a3-f0f2-458a-89bd-94887e05d3c1" class="numbered-list" start="9"><li><strong>Posicionamiento en el mercado:</strong> [INSERTA EL POSICIONAMIENTO EN EL MERCADO]</li></ol><p id="71970bf4-b7f0-4ee4-b656-7a1193645fe6" class=""><strong>Asegúrate de que la descripción sea precisa, clara y completa.</strong></p><p id="0bd4f9d5-e82d-482f-8a74-44eb4b82c5f2" class=""><strong>Ten en cuenta el siguiente contexto:</strong></p><p id="5a886fa7-623b-4bec-a95a-1b9eb2d2decd" class="">Este perfil será utilizado para personalizar las respuestas de chatGPT, proporcionando un contexto más rico y adaptado a la empresa descrita.</p><p id="983bfecb-73df-4409-b72e-7c28ebc6802b" class=""><strong>Hazme las preguntas que consideres necesarias para que puedas darme la mejor respuesta posible.</strong></p></details></li></ul><ul id="9fee7079-395a-45ad-86fd-b574ed997303" class="toggle"><li><details open=""><summary><strong>Prompt para describir Rol</strong></summary><p id="52188889-5834-4a73-babd-39c05e1b1a5e" class=""><strong>Actúa como si fueras [un experto en redacción de perfiles profesionales]</strong></p><p id="b5639348-39ec-45be-b80f-9590bd88b368" class=""><strong>Crea una descripción detallada de [NOMBRE_DEL_ROL], teniendo en cuenta los siguientes detalles:</strong></p><ol type="1" id="1074c0ad-cd69-43eb-809a-a0f0644d5153" class="numbered-list" start="1"><li><strong>Nombre:</strong> [INSERTA EL NOMBRE]</li></ol><ol type="1" id="eaefd158-483f-4012-84be-e05d72876ee1" class="numbered-list" start="2"><li><strong>Rol/Título de trabajo:</strong> [INSERTA EL TÍTULO DEL TRABAJO]</li></ol><ol type="1" id="d5dee20b-46eb-4f6c-aef8-9c5e4b097c78" class="numbered-list" start="3"><li><strong>Organización:</strong> [INSERTA EL NOMBRE DE LA ORGANIZACIÓN]</li></ol><ol type="1" id="9de65627-915b-4d88-917b-bc5f6d7a8eff" class="numbered-list" start="4"><li><strong>Industria:</strong> [INSERTA LA INDUSTRIA]</li></ol><ol type="1" id="d9a16448-2e2b-4561-b45c-a638e9e9376f" class="numbered-list" start="5"><li><strong>Responsabilidades clave:</strong> [INSERTA LAS RESPONSABILIDADES CLAVE]</li></ol><ol type="1" id="0e8e1616-ed50-439d-8431-e28f6d453d63" class="numbered-list" start="6"><li><strong>Preocupaciones/Intereses:</strong> [INSERTA PREOCUPACIONES/INTERESES]</li></ol><ol type="1" id="b613c704-cca2-4010-9c6f-a53dbff87875" class="numbered-list" start="7"><li><strong>Formación académica y experiencia:</strong> [INSERTA FORMACIÓN ACADÉMICA Y EXPERIENCIA]</li></ol><ol type="1" id="7f7ae417-db19-4ba6-b96e-363cf39cfc05" class="numbered-list" start="8"><li><strong>Estilo de comunicación preferido:</strong> [INSERTA EL ESTILO DE COMUNICACIÓN PREFERIDO]</li></ol><ol type="1" id="2ab73712-ec18-4d4a-858a-12402edaada5" class="numbered-list" start="9"><li><strong>Tono preferido:</strong> [INSERTA EL TONO PREFERIDO]</li></ol><p id="05814cf8-04ba-4c43-b984-ac88b8895c0d" class=""><strong>Asegúrate de que la descripción sea precisa, clara y completa.</strong></p><p id="a44e1b2b-722a-440e-ab87-ea47a06d4356" class=""><strong>Ten en cuenta el siguiente contexto:</strong></p><p id="af43e854-ab2d-4c36-956c-db43fd27dfc4" class="">Este perfil será utilizado para personalizar las respuestas de chatGPT, proporcionando un contexto más rico y adaptado al rol individual descrito.</p><p id="00517746-7bd7-43c8-b239-368bb21f0250" class=""><strong>Hazme las preguntas que consideres necesarias para que puedas darme la mejor respuesta posible.</strong></p></details></li></ul><ul id="32be9d9b-5e22-422d-bc02-e464c16e9b6f" class="toggle"><li><details open=""><summary><strong>Prompt para describir Audiencia</strong></summary><p id="98df3ffc-295e-413c-968b-89c5a16bfaf3" class=""><strong>Actúa como si fueras [un experto en análisis de audiencias]</strong></p><p id="9a456dff-decb-437a-bb95-cfdf2501500b" class=""><strong>Crea una descripción detallada de [NOMBRE_DE_LA_AUDIENCIA], teniendo en cuenta los siguientes detalles:</strong></p><ol type="1" id="046ec29f-44a0-4bad-9a08-05f84d1ef700" class="numbered-list" start="1"><li><strong>Nombre de la Audiencia:</strong> [INSERTA EL NOMBRE DE LA AUDIENCIA]</li></ol><ol type="1" id="6102ec12-3890-4f34-863b-b8f9e1932c73" class="numbered-list" start="2"><li><strong>Características demográficas:</strong> [INSERTA LAS CARACTERÍSTICAS DEMOGRÁFICAS]</li></ol><ol type="1" id="c954b1aa-b61a-4279-8f92-1dd228d0732c" class="numbered-list" start="3"><li><strong>Intereses principales:</strong> [INSERTA LOS INTERESES PRINCIPALES]</li></ol><ol type="1" id="9659aff6-154d-4cce-a605-273d4f0fc90d" class="numbered-list" start="4"><li><strong>Preocupaciones/Desafíos:</strong> [INSERTA PREOCUPACIONES/DESAFÍOS]</li></ol><ol type="1" id="566a6221-2379-4648-9f13-d077ce663b37" class="numbered-list" start="5"><li><strong>Formato de comunicación preferido:</strong> [INSERTA EL FORMATO PREFERIDO]</li></ol><ol type="1" id="9bc0c4a2-69f4-43b6-b44b-19d95244968e" class="numbered-list" start="6"><li><strong>Estilo de comunicación preferido:</strong> [INSERTA EL ESTILO DE COMUNICACIÓN PREFERIDO]</li></ol><ol type="1" id="3ea70976-e198-4774-843f-222dc8382a84" class="numbered-list" start="7"><li><strong>Tono de comunicación preferido:</strong> [INSERTA EL TONO PREFERIDO]</li></ol><p id="50697ed1-c670-4cf1-b9f0-a66e5c3d93f4" class=""><strong>Asegúrate de que la descripción sea precisa, detallada y comprensible.</strong></p><p id="c80a3a7b-cc15-48a7-8fb5-5541064da189" class=""><strong>Ten en cuenta el siguiente contexto:</strong></p><p id="92b8480e-6e19-429b-8133-5789b13db26b" class="">Este perfil de audiencia será utilizado para personalizar las respuestas de chatGPT, ofreciendo un contexto más preciso y adaptado a la audiencia especificada.</p><p id="76c8f1e2-4bac-4555-bdb0-442ee91cd2a2" class=""><strong>Hazme las preguntas que consideres necesarias para que puedas darme la mejor respuesta posible.</strong></p></details></li></ul></details></li></ul><hr id="e5f86182-7afd-4b45-b03f-6b76c688fb0a"/><div id="ead963b9-b21d-4bd3-93e0-99dc6dcf475a" class="column-list"><div id="2f5c02a9-99a5-4adb-9047-3c23e16b6fd3" style="width:50%" class="column"><ul id="7c67690b-6487-4c2e-be8d-ee883d2939b1" class="toggle"><li><details open=""><summary><strong>Roles (Como si fueras…)</strong></summary><ol type="1" id="c16dff04-a7e6-4a67-9a2d-68f7b7260a64" class="numbered-list" start="1"><li>Persona experta en inteligencia artificial</li></ol><ol type="1" id="932a4992-7c57-4c1f-b57d-e9a90a6fdc0e" class="numbered-list" start="2"><li>Persona experta en derecho internacional</li></ol><ol type="1" id="0edb7176-1bd8-42a2-9c25-92e2eae85039" class="numbered-list" start="3"><li>Persona experta en marketing digital</li></ol><ol type="1" id="13b058d5-2a2a-43a3-bfd7-bec85c16a262" class="numbered-list" start="4"><li>Persona experta en medicina deportiva</li></ol><ol type="1" id="83528e0f-f81e-423b-8890-9c937deff158" class="numbered-list" start="5"><li>Persona experta en finanzas corporativas</li></ol><ol type="1" id="e209ca9c-4240-4168-8567-e31070211696" class="numbered-list" start="6"><li>Persona experta en psicología organizacional</li></ol><ol type="1" id="f34098ba-f7e7-4e12-aeeb-2f8a5c0db836" class="numbered-list" start="7"><li>Persona experta en energías renovables</li></ol><ol type="1" id="3d77964a-098d-4f8e-957d-2b07c0b13f7e" class="numbered-list" start="8"><li>Persona experta en diseño de experiencia de usuario (UX)</li></ol><ol type="1" id="4c199a5a-b282-409a-98d0-8c102c3e53ee" class="numbered-list" start="9"><li>Persona experta en desarrollo sostenible</li></ol><ol type="1" id="69e417e4-d3c6-40c3-ac75-4ea742724079" class="numbered-list" start="10"><li>Persona experta en seguridad cibernética</li></ol></details></li></ul><ul id="14663563-ad6f-4860-bbaf-85a9cfb528fc" class="toggle"><li><details open=""><summary><strong>Verbos (Acciones a realizar)</strong></summary><ol type="1" id="18e59e81-10d7-4552-abaf-c91beaa98e65" class="numbered-list" start="1"><li>Describe</li></ol><ol type="1" id="8d5a8eb0-6d99-4567-9a20-1d8a522caf8b" class="numbered-list" start="2"><li>Analiza</li></ol><ol type="1" id="ba645f81-9180-4f9d-86c6-18730705b923" class="numbered-list" start="3"><li>Explora</li></ol><ol type="1" id="5bfe8f60-ccab-4da4-a42a-2f707e8fb77e" class="numbered-list" start="4"><li>Imagina</li></ol><ol type="1" id="3504526f-cd89-43ce-a914-6ca473d1ffa9" class="numbered-list" start="5"><li>Crea</li></ol><ol type="1" id="afc9540a-c71d-42bd-ae2e-3d841e67debf" class="numbered-list" start="6"><li>Compara</li></ol><ol type="1" id="86167914-09ab-4016-8b66-eb0bf0a42c32" class="numbered-list" start="7"><li>Explica</li></ol><ol type="1" id="a6335892-bc2d-4619-bf4f-c787447ffa3e" class="numbered-list" start="8"><li>Argumenta</li></ol><ol type="1" id="e01589dc-c768-4879-a4ed-40a2a18d335a" class="numbered-list" start="9"><li>Propone</li></ol><ol type="1" id="eece3e84-4cf8-4666-8fab-9e05e591c0f1" class="numbered-list" start="10"><li>Reflexiona</li></ol></details></li></ul><ul id="8feaa3f6-fb14-455e-a5a5-61eebcc03ade" class="toggle"><li><details open=""><summary><strong>Formatos (Estructura del contenido)</strong></summary><ol type="1" id="27cd8eca-4d2c-4621-b2a1-9b1aa0f9cb06" class="numbered-list" start="1"><li><strong>Ensayo</strong>: Un formato tradicional en el que se presenta un argumento o se explora un tema en profundidad, con una introducción, desarrollo y conclusión.</li></ol><ol type="1" id="6d325ee2-cee9-48a8-9772-e450366e4a87" class="numbered-list" start="2"><li><strong>Diálogo</strong>: Un intercambio de palabras entre dos o más personas, que permite simular una conversación o debate sobre un tema en particular.</li></ol><ol type="1" id="2b2a3127-dbc6-4e05-aeb7-ff8d45611a1c" class="numbered-list" start="3"><li><strong>Lista de viñetas</strong>: Un formato que presenta información de manera concisa y organizada, utilizando viñetas o puntos numerados para resumir ideas clave.</li></ol><ol type="1" id="9295a8ae-acb9-4a00-b7e1-2539a6f8ad81" class="numbered-list" start="4"><li><strong>Narrativa corta</strong>: Una historia breve que desarrolla personajes, trama y escenario, con el propósito de entretener o transmitir un mensaje.</li></ol><ol type="1" id="c56c1b20-6f79-4d75-b3bb-88fdb9293da5" class="numbered-list" start="5"><li><strong>Resumen ejecutivo</strong>: Un formato utilizado para proporcionar una visión general concisa y clara de un tema o proyecto, destacando los aspectos más relevantes.</li></ol><ol type="1" id="2eb2dbf7-6146-4a84-bde9-f0db9b21fa50" class="numbered-list" start="6"><li><strong>Presentación de diapositivas</strong>: Un formato visual que utiliza diapositivas para presentar información de manera secuencial, utilizando texto, imágenes y gráficos.</li></ol><ol type="1" id="fe0aeeea-faee-43b0-85cf-d580689edb8c" class="numbered-list" start="7"><li><strong>Artículo de opinión</strong>: Un formato en el que se expresa una perspectiva personal sobre un tema, respaldada por argumentos y evidencias.</li></ol><ol type="1" id="8ed73993-1b00-40b8-9855-db520e2a38b4" class="numbered-list" start="8"><li><strong>Guía paso a paso</strong>: Un formato que proporciona instrucciones detalladas y secuenciales para realizar una tarea o alcanzar un objetivo específico.</li></ol><ol type="1" id="0b4244f7-01f1-4c64-82df-e3a22558facb" class="numbered-list" start="9"><li><strong>Entrevista ficticia</strong>: Un formato en el que se simula una entrevista imaginaria con preguntas y respuestas entre el entrevistador y el entrevistado sobre un tema relevante.</li></ol><ol type="1" id="8ec6f78e-0eb3-4dbf-b6a0-67cb1b3c3882" class="numbered-list" start="10"><li><strong>Infografía</strong>: Un formato visual que combina imágenes, gráficos y texto para presentar información de manera clara y concisa, facilitando la comprensión rápida de un tema.</li></ol></details></li></ul><ul id="df5cb04c-243c-4656-a8c5-61e95f028e9c" class="toggle"><li><details open=""><summary><strong>Estilos (Tipo de lenguaje y expresión)</strong></summary><ol type="1" id="9b21e101-6745-4d6a-bdc3-73a5ba7f341a" class="numbered-list" start="1"><li><strong>Académico</strong>: Un estilo formal y objetivo utilizado en contextos académicos, con un lenguaje preciso y estructura clara.</li></ol><ol type="1" id="bd4a0ed5-b59a-460f-b4a8-0a4b314af552" class="numbered-list" start="2"><li><strong>Narrativo</strong>: Un estilo que utiliza elementos de la narrativa para contar una historia o presentar información de manera más envolvente y atractiva.</li></ol><ol type="1" id="ce40ab17-31e9-4b96-88a3-5055bc3e6785" class="numbered-list" start="3"><li><strong>Humorístico</strong>: Un estilo divertido y humorístico que utiliza juegos de palabras, ironía o situaciones cómicas para captar la atención y entretener al lector.</li></ol><ol type="1" id="62cfcc3a-575e-43d2-aca0-15b4309825e5" class="numbered-list" start="4"><li><strong>Persuasivo</strong>: Un estilo que busca convencer al lector mediante argumentos sólidos, lenguaje persuasivo y técnicas retóricas.</li></ol><ol type="1" id="5f3ceac9-4814-4672-803e-dd4c8f362f7e" class="numbered-list" start="5"><li><strong>Descriptivo</strong>: Un estilo detallado y descriptivo que utiliza lenguaje evocativo para crear imágenes vívidas y transportar al lector al contexto descrito.</li></ol><ol type="1" id="d641dba0-eb5b-46c7-a361-2ebc7c22eaf9" class="numbered-list" start="6"><li><strong>Técnico</strong>: Un estilo preciso y especializado utilizado en áreas técnicas o científicas, con terminología específica y un enfoque en los detalles técnicos.</li></ol><ol type="1" id="4db07e68-9e50-4772-8840-7e884db4445d" class="numbered-list" start="7"><li><strong>Conversacional</strong>: Un estilo informal y cercano, como si se estuviera teniendo una conversación amigable con el lector.</li></ol><ol type="1" id="cc89b995-5ec5-4271-a89b-ec41528e4c57" class="numbered-list" start="8"><li><strong>Poético</strong>: Un estilo lírico y poético que utiliza lenguaje figurativo, ritmo y belleza estética para transmitir emociones y sensaciones.</li></ol><ol type="1" id="501410e7-a657-462a-b3f8-91be14afe395" class="numbered-list" start="9"><li><strong>Crítico</strong>: Un estilo que adopta una postura crítica y analítica, evaluando y cuestionando ideas, obras o situaciones.</li></ol><ol type="1" id="081b5706-9a33-48ee-be6e-e30f811cab78" class="numbered-list" start="10"><li><strong>Informativo</strong>: Un estilo claro y directo que se centra en la transmisión de información de manera concisa y precisa.</li></ol></details></li></ul></div><div id="76d4d928-aea4-4663-a0d6-f88dc06bdeb5" style="width:50%" class="column"><ul id="2b874db2-0599-45f7-af30-22243570ae1f" class="toggle"><li><details open=""><summary><strong>Tonos (Emotividad)</strong></summary><ol type="1" id="f5254fbb-6e96-4ec7-bc81-e2831188f2ff" class="numbered-list" start="1"><li><strong>Serio</strong>: Un tono formal y sobrio, utilizado para tratar temas importantes o delicados.</li></ol><ol type="1" id="56ff149e-4581-41a7-8c38-734ab03a3ee7" class="numbered-list" start="2"><li><strong>Humorístico</strong>: Un tono divertido y gracioso, utilizado para añadir humor y hacer la solicitud más entretenida.</li></ol><ol type="1" id="b968451c-e83f-421a-ae19-36795292fef7" class="numbered-list" start="3"><li><strong>Informativo</strong>: Un tono objetivo y neutral, utilizado para proporcionar información precisa y detallada.</li></ol><ol type="1" id="8aa8fc5e-406a-4708-8964-23e8efea4e1a" class="numbered-list" start="4"><li><strong>Inspirador</strong>: Un tono motivador y alentador, utilizado para motivar a la acción y generar entusiasmo en la respuesta.</li></ol><ol type="1" id="b6815984-cdff-419e-afcf-ac9ca90d79a7" class="numbered-list" start="5"><li><strong>Reflexivo</strong>: Un tono introspectivo y profundo, utilizado para invitar a la reflexión y a considerar aspectos más profundos del tema.</li></ol><ol type="1" id="c98d8b30-8989-461a-a2e4-708f8ced2968" class="numbered-list" start="6"><li><strong>Irónico</strong>: Un tono sarcástico e irónico, utilizado para expresar una discrepancia entre lo que se dice y lo que se entiende.</li></ol><ol type="1" id="facdd7e5-2142-40ad-926c-a72729420b4b" class="numbered-list" start="7"><li><strong>Cálido</strong>: Un tono amigable y cercano, utilizado para crear una conexión emocional con el lector y generar confianza.</li></ol><ol type="1" id="13975ca5-3cbd-4d9c-a3f1-bba2dad7cb69" class="numbered-list" start="8"><li><strong>Contundente</strong>: Un tono directo y enérgico, utilizado para comunicar una solicitud de manera clara y contundente.</li></ol><ol type="1" id="5681171d-9277-43da-9d13-fab70fcb018b" class="numbered-list" start="9"><li><strong>Ponderado</strong>: Un tono equilibrado y objetivo, utilizado para analizar diferentes perspectivas y presentar argumentos de manera imparcial.</li></ol><ol type="1" id="98814528-1897-4490-8038-98075760dad2" class="numbered-list" start="10"><li><strong>Convincente</strong>: Un tono persuasivo y convincente, utilizado para persuadir al lector y generar un impacto en su forma de pensar.</li></ol></details></li></ul><ul id="1ea1ff5e-dedb-4f3f-b050-d33fabc59c25" class="toggle"><li><details open=""><summary><strong>Audiencias (Dirigido a…)</strong></summary><ol type="1" id="e8c4449e-c2e4-452a-bdf1-6bc776ed7f86" class="numbered-list" start="1"><li>Personas profesionales de la salud</li></ol><ol type="1" id="17cbaed6-4af8-4672-b4e6-3f4b763f88ad" class="numbered-list" start="2"><li>Estudiantes universitarios/as</li></ol><ol type="1" id="416627d8-d813-4c60-bcda-8c006be68ec6" class="numbered-list" start="3"><li>Padres y madres jóvenes</li></ol><ol type="1" id="bc6a8dfa-7ad5-46bc-a2f4-274514b65232" class="numbered-list" start="4"><li>Comunidad artística y creativa</li></ol><ol type="1" id="b5394b48-6987-4c0a-a182-55076c121b19" class="numbered-list" start="5"><li>Trabajadores/as del sector financiero</li></ol><ol type="1" id="6dc5b497-3ffe-4034-b0db-c71594c41de0" class="numbered-list" start="6"><li>Adultos mayores en busca de actividades recreativas</li></ol><ol type="1" id="9dc3b473-955f-45d7-b1ba-fae2e1909bf7" class="numbered-list" start="7"><li>Comunidad LGBTQIA+</li></ol><ol type="1" id="cb64104c-6b2f-4a2d-96d3-d2dff39a0eda" class="numbered-list" start="8"><li>Emprendedores y empresarias</li></ol><ol type="1" id="7b3953b0-fda5-4555-bc72-ca177befcb1b" class="numbered-list" start="9"><li>Trabajadores/as del sector tecnológico</li></ol><ol type="1" id="3fbba22c-36c1-4bf2-9bd6-6fc7e754e667" class="numbered-list" start="10"><li>Personas interesadas en la sostenibilidad y el medio ambiente</li></ol></details></li></ul><ul id="cd5d29df-2fea-414b-8133-cb43f8cb9ee9" class="toggle"><li><details open=""><summary><strong>Contextos (Información complementaria)</strong></summary><ul id="b0fb58f9-ceb9-4e0f-8bd1-ce67cb100884" class="toggle"><li><details open=""><summary><strong>Contexto 1</strong></summary><p id="f2c35575-6499-4075-bf97-ffec35ef93aa" class="">
+</p></details></li></ul><ul id="64cc2c3b-232f-4294-8b75-3e3086cf1b6c" class="toggle"><li><details open=""><summary><strong>Contexto 2</strong></summary><p id="c031b936-85a4-4021-adc4-56910efdd253" class="">
+</p></details></li></ul></details></li></ul></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="e7852419-412f-48ac-83f7-2f02bc8da1bb"><div style="font-size:1.5em"><img class="icon" src="Herramienta%20de%20Prompting%202bb5471ed1a34453b3fd86a06b23173a/F_Cuadrado_(1)%201.jpg"/></div><div style="width:100%"><strong>Esta plantilla pertenece al Máster Online en IA e Innovación de Founderz</strong><p id="0ef6f674-1de9-42bf-9080-f5cd4b6db95b" class="">Para más información encuéntranos aquí:</p><p id="2589ec39-ad2c-4a15-b02a-89ab89378ab8" class=""><a href="https://founderz.com/es">Web</a> · <a href="https://www.linkedin.com/school/founderz-digital-business-school">LinkedIn</a> · <a href="https://www.instagram.com/founderzunschool/">Instagram</a> · <a href="https://twitter.com/founderz">Twitter</a> · <a href="https://www.tiktok.com/@founderzunschool">TikTok</a> · <a href="https://www.facebook.com/founderzschool">Facebook</a></p></div></figure><p id="86cad9f8-f5b2-43f7-8b71-5cd4738742e2" class="">
+</p></div></article></body></html>
